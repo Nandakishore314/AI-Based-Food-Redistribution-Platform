@@ -30,7 +30,7 @@ export function LandingPage() {
             </div>
             <div>
               <p className="font-bold text-ink">AI Food</p>
-              <p className="text-xs font-semibold uppercase text-slate-500">Redistribution System</p>
+              <p className="text-xs font-semibold uppercase text-slate-500">Redistribution Platform</p>
             </div>
           </div>
           <div className="relative">
@@ -60,7 +60,7 @@ export function LandingPage() {
         <div className="grid flex-1 items-center gap-10 py-12 lg:grid-cols-[0.95fr_1.05fr]">
           <div>
             <h1 className="max-w-4xl text-5xl font-bold leading-tight text-ink sm:text-6xl">
-              AI Food Redistribution System
+              AI Food Redistribution Platform
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
               This is an AI-based food redistribution platform that connects food donors, NGOs, volunteers, and

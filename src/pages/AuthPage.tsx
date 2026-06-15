@@ -29,6 +29,8 @@ export function AuthPage() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -40,6 +42,20 @@ export function AuthPage() {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
+
+    // Phone validation for non-admin signup
+    if (role !== "admin" && mode === "signup") {
+      if (!phone.trim()) {
+        setPhoneError("Phone number is required.");
+        return;
+      }
+      if (!/^\d{10}$/.test(phone.trim())) {
+        setPhoneError("Please enter a valid 10-digit phone number.");
+        return;
+      }
+    }
+    setPhoneError("");
+
     const result = authenticate({ name, email, password, confirmPassword, role, mode });
     if (!result.ok) {
       setError(result.error ?? "Please complete all required fields.");
@@ -100,6 +116,26 @@ export function AuthPage() {
                   </div>
                 </FormField>
               ) : null}
+              {role !== "admin" && mode === "signup" ? (
+                <FormField label="Phone Number" error={phoneError}>
+                  <div className="relative">
+                    <Icon name="phone" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                    <TextInput
+                      type="tel"
+                      inputMode="numeric"
+                      maxLength={10}
+                      placeholder="10-digit phone number"
+                      value={phone}
+                      onChange={(event) => {
+                        const val = event.target.value.replace(/\D/g, "");
+                        setPhone(val);
+                        if (phoneError) setPhoneError("");
+                      }}
+                      className="pl-11"
+                    />
+                  </div>
+                </FormField>
+              ) : null}
               <FormField label="Password">
                 <div className="relative">
                   <Icon name="lock" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
@@ -137,6 +173,8 @@ export function AuthPage() {
                   onClick={() => {
                     setMode(mode === "login" ? "signup" : "login");
                     setError("");
+                    setPhone("");
+                    setPhoneError("");
                   }}
                   className="focus-ring rounded font-semibold text-herb hover:text-ink"
                 >
