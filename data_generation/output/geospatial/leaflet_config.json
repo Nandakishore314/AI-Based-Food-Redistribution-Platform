@@ -1,0 +1,91 @@
+{
+  "map_config": {
+    "center": [
+      20.5937,
+      78.9629
+    ],
+    "zoom": 5,
+    "min_zoom": 4,
+    "max_zoom": 16,
+    "tile_layer": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "attribution": "Map data (c) OpenStreetMap contributors | Data: AI Food Redistribution Platform"
+  },
+  "heatmap_layer": {
+    "plugin": "leaflet-heat",
+    "data_file": "hunger_heatmap.geojson",
+    "intensity_field": "Food_Insecurity_Score",
+    "radius": 25,
+    "blur": 15,
+    "max_zoom": 12,
+    "gradient": {
+      "0.0": "#00ff00",
+      "0.3": "#ffff00",
+      "0.5": "#ff9900",
+      "0.7": "#ff4400",
+      "0.9": "#cc0000",
+      "1.0": "#660000"
+    }
+  },
+  "cluster_layer": {
+    "plugin": "leaflet.markercluster",
+    "data_file": "hunger_heatmap.geojson",
+    "popup_field": "popup_label",
+    "color_by": "Cluster_Type",
+    "color_map": {
+      "Urban": "#3388ff",
+      "Semi-Urban": "#33cc33",
+      "Rural": "#ff9933",
+      "Slum": "#cc0066",
+      "Hotspot": "#ff0000"
+    }
+  },
+  "choropleth_config": {
+    "field": "Food_Insecurity_Score",
+    "breaks": [
+      0.238,
+      0.311,
+      0.404,
+      0.587,
+      0.869
+    ],
+    "colors": [
+      "#ffffb2",
+      "#fecc5c",
+      "#fd8d3c",
+      "#f03b20",
+      "#bd0026"
+    ],
+    "labels": [
+      "Low",
+      "Moderate",
+      "High",
+      "Very High",
+      "Critical"
+    ]
+  },
+  "data_summary": {
+    "total_points": 100000,
+    "lat_range": [
+      8.0999,
+      31.7351
+    ],
+    "lon_range": [
+      68.0,
+      97.5
+    ],
+    "fis_mean": 0.4115,
+    "fis_std": 0.2089,
+    "fis_p90": 0.7178,
+    "demand_mean": 3.968,
+    "demand_max": 10.0,
+    "hotspot_count": 11226,
+    "cluster_counts": {
+      "Urban": 28420,
+      "Rural": 23691,
+      "Semi-Urban": 23677,
+      "Hotspot": 12820,
+      "Slum": 11392
+    }
+  },
+  "leaflet_html_snippet": "\n<!-- Add to your HTML <head> -->\n<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.9.4/dist/leaflet.css\"/>\n<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css\"/>\n<script src=\"https://unpkg.com/leaflet@1.9.4/dist/leaflet.js\"></script>\n<script src=\"https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js\"></script>\n<script src=\"https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js\"></script>\n\n<!-- JavaScript -->\n<script>\n// Initialize map\nconst map = L.map('map').setView([20.5937, 78.9629], 5);\nL.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);\n\n// Load GeoJSON and create heatmap\nfetch('hunger_heatmap.geojson')\n  .then(r => r.json())\n  .then(data => {\n    const heatData = data.features.map(f => [\n      f.geometry.coordinates[1],\n      f.geometry.coordinates[0],\n      f.properties.Food_Insecurity_Score\n    ]);\n    L.heatLayer(heatData, {radius: 25, blur: 15, maxZoom: 12}).addTo(map);\n  });\n\n// Load hotspots as clustered markers\nfetch('hotspots.geojson')\n  .then(r => r.json())\n  .then(data => {\n    const markers = L.markerClusterGroup();\n    L.geoJSON(data, {\n      onEachFeature: (feature, layer) => {\n        layer.bindPopup(feature.properties.popup_label);\n      }\n    }).addTo(markers);\n    map.addLayer(markers);\n  });\n</script>\n"
+}

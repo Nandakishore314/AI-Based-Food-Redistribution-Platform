@@ -1,0 +1,36 @@
+{
+  "look_back": 30,
+  "features": [
+    "Meals_Requested",
+    "Rainfall",
+    "Temperature",
+    "Festival_Flag",
+    "Disaster_Flag"
+  ],
+  "target": "Meals_Requested",
+  "target_feature_index": 0,
+  "selected_regions": [
+    "R25",
+    "R24",
+    "R22",
+    "R30",
+    "R04"
+  ],
+  "shapes": {
+    "train": [
+      6565,
+      30,
+      5
+    ],
+    "val": [
+      1405,
+      30,
+      5
+    ],
+    "test": [
+      1415,
+      30,
+      5
+    ]
+  }
+}

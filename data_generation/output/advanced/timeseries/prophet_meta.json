@@ -1,0 +1,10 @@
+{
+  "regressors": [
+    "Festival_Flag",
+    "Disaster_Flag",
+    "Rainfall",
+    "Temperature"
+  ],
+  "look_back": null,
+  "note": "Prophet format: ds + y + regressors"
+}
